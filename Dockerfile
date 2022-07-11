@@ -26,7 +26,7 @@ RUN apt -y update -qq && apt -y upgrade && \
 		dirmngr \
 		less \
 		perl \
-		strace wget
+		strace tabix wget
 
 # we map the user owning the image so permissions for input/output will work
 USER $USERNAME
