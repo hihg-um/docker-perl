@@ -6,8 +6,8 @@ OS_BASE ?= ubuntu
 OS_VER ?= 22.04
 
 USER ?= `whoami`
-USERID := `id -u`
-USERGID := `id -g`
+USERID ?= `id -u`
+USERGID ?= `id -g`
 
 IMAGE_REPOSITORY :=
 IMAGE := $(ORG_NAME)/$(USER)/$(PROJECT_NAME):latest
