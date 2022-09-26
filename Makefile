@@ -19,7 +19,7 @@ DOCKER_BUILD_ARGS := --progress=plain
 all: docker test
 
 test:
-		@docker run -it $(IMAGE) -v
+	@docker run -it $(IMAGE) -v
 
 clean:
 	@docker rmi $(IMAGE)
