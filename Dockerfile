@@ -29,7 +29,7 @@ RUN apt -y update -qq && apt -y upgrade && \
 		curl \
 		dirmngr \
 		less \
-		perl \
+		perl libbio-db-hts-perl \
 		strace tabix wget
 
 # we map the user owning the image so permissions for input/output will work
