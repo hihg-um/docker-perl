@@ -14,12 +14,19 @@ IMAGE := $(ORG_NAME)/$(USER)/$(PROJECT_NAME):latest
 # Use this for debugging builds. Turn off for a more slick build log
 DOCKER_BUILD_ARGS := --progress=plain
 
-.PHONY: all build clean docker test tests
+.PHONY: all build clean docker test test_docker test_singularity
 
-all: docker test
+all: docker singularity test
 
-test:
+test: test_docker test_singularity
+
+test_docker:
+	@echo "Testing docker image: $(IMAGE)"
 	@docker run -it -v /mnt:/mnt $(IMAGE) -v
+
+test_singularity:
+	@echo "Testing singularity image: $(PROJECT_NAME).sif"
+	@singularity run $(PROJECT_NAME).sif -v
 
 clean:
 	@docker rmi $(IMAGE)
@@ -32,6 +39,9 @@ docker:
 		--build-arg USERID=$(USERID) \
 		--build-arg USERGID=$(USERGID) \
 		.
+
+singularity:
+	@singularity build $(PROJECT_NAME).sif docker-daemon:$(IMAGE)
 
 release:
 	docker push $(IMAGE_REPOSITORY)/$(IMAGE)
