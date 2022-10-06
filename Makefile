@@ -16,7 +16,7 @@ DOCKER_BUILD_ARGS := --progress=plain
 
 .PHONY: all build clean docker test test_docker test_singularity
 
-all: docker singularity test
+all: docker $(PROJECT_NAME).sif test
 
 test: test_docker test_singularity
 
@@ -24,12 +24,13 @@ test_docker:
 	@echo "Testing docker image: $(IMAGE)"
 	@docker run -it -v /mnt:/mnt $(IMAGE) -v
 
-test_singularity:
+test_singularity: $(PROJECT_NAME).sif
 	@echo "Testing singularity image: $(PROJECT_NAME).sif"
 	@singularity run $(PROJECT_NAME).sif -v
 
 clean:
 	@docker rmi $(IMAGE)
+	@rm $(PROJECT_NAME).sif
 
 docker:
 	@docker build -t $(IMAGE) \
@@ -40,7 +41,7 @@ docker:
 		--build-arg USERGID=$(USERGID) \
 		.
 
-singularity:
+$(PROJECT_NAME).sif:
 	@singularity build $(PROJECT_NAME).sif docker-daemon:$(IMAGE)
 
 release:
