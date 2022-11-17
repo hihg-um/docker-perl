@@ -29,8 +29,8 @@ test_singularity: $(PROJECT_NAME).sif
 	@singularity run $(PROJECT_NAME).sif -v
 
 clean:
-	@docker rmi $(IMAGE)
-	@rm $(PROJECT_NAME).sif
+	@docker rmi -f --no-prune $(IMAGE)
+	@rm -f $(PROJECT_NAME).sif
 
 docker:
 	@docker build -t $(IMAGE) \
