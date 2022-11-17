@@ -11,8 +11,8 @@ ARG USERGID
 
 # Put the user name and ID into the ENV, so the runtime inherits them
 ENV USERNAME=${USERNAME:-nouser} \
-        USERID=${USERID:-65533} \
-        USERGID=${USERGID:-nogroup}
+    USERID=${USERID:-65533} \
+    USERGID=${USERGID:-nogroup}
 
 # match the building user. This will allow output only where the building
 # user has write permissions
