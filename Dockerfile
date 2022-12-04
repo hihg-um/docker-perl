@@ -7,16 +7,20 @@ FROM $BASE_IMAGE
 # without these, the container will fail-safe and be unable to write output
 ARG USERNAME
 ARG USERID
+ARG USERGNAME
 ARG USERGID
 
 # Put the user name and ID into the ENV, so the runtime inherits them
 ENV USERNAME=${USERNAME:-nouser} \
-    USERID=${USERID:-65533} \
-    USERGID=${USERGID:-nogroup}
+	USERID=${USERID:-65533} \
+	USERGNAME=${USERGNAME:-users} \
+	USERGID=${USERGID:-nogroup}
 
 # match the building user. This will allow output only where the building
 # user has write permissions
-RUN useradd -m -u $USERID -g $USERGID $USERNAME
+RUN groupadd -g $USERGID $USERGNAME && \
+        useradd -m -u $USERID -g $USERGID $USERNAME && \
+        adduser $USERNAME $USERGNAME
 
 # Install OS updates, security fixes and utils
 RUN apt -y update -qq && apt -y upgrade && \
@@ -30,5 +34,5 @@ RUN apt -y update -qq && apt -y upgrade && \
 
 # we map the user owning the image so permissions for input/output will work
 USER $USERNAME
-
+WORKDIR /app
 ENTRYPOINT [ "perl" ]
