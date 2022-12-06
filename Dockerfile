@@ -1,5 +1,5 @@
 ARG BASE_IMAGE
-FROM $BASE_IMAGE
+FROM $BASE_IMAGE as base
 
 # SPDX-License-Identifier: GPL-2.0
 
@@ -29,10 +29,19 @@ RUN apt -y update -qq && apt -y upgrade && \
 		curl \
 		dirmngr \
 		less \
-		perl libbio-db-hts-perl \
-		strace tabix wget
+		perl strace tabix wget
 
-# we map the user owning the image so permissions for input/output will work
-USER $USERNAME
 WORKDIR /app
 ENTRYPOINT [ "perl" ]
+
+FROM base as perl
+# we map the user owning the image so permissions for input/output will work
+USER $USERNAME
+
+FROM base as perl-libbio-db-hts-perl
+
+RUN apt -y update -qq && apt -y upgrade && \
+        DEBIAN_FRONTEND=noninteractive apt -y install \
+		libbio-db-hts-perl
+
+USER $USERNAME

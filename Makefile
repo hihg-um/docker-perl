@@ -37,6 +37,7 @@ clean:
 docker:
 	@docker build -t $(IMAGE) \
 		$(DOCKER_BUILD_ARGS) \
+		--target perl-libbio-db-hts-perl \
 		--build-arg BASE_IMAGE=$(OS_BASE):$(OS_VER) \
 		--build-arg USERNAME=$(USER) \
 		--build-arg USERID=$(USERID) \
