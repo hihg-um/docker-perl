@@ -42,6 +42,6 @@ FROM base as perl-libbio-db-hts-perl
 
 RUN apt -y update -qq && apt -y upgrade && \
         DEBIAN_FRONTEND=noninteractive apt -y install \
-		libbio-db-hts-perl
+		libbio-db-hts-perl libmemory-usage-perl
 
 USER $USERNAME
