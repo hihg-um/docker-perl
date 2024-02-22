@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0
 ARG BASE_IMAGE
-FROM $BASE_IMAGE as base
+FROM $BASE_IMAGE
+
+LABEL org.opencontainers.image.description="Perl 5 common base image"
 
 # Install OS updates, security fixes and utils
 RUN apt -y update -qq && apt -y upgrade && \
@@ -8,13 +10,7 @@ RUN apt -y update -qq && apt -y upgrade && \
 		ca-certificates \
 		curl \
 		dirmngr \
-		less \
-		perl strace tabix wget
-
-WORKDIR /app
-ENTRYPOINT [ "perl" ]
-
-FROM base as perl
-
-RUN DEBIAN_FRONTEND=noninteractive apt -y install \
-		libbio-db-hts-perl libmemory-usage-perl
+		libbio-db-hts-perl \
+		libmemory-usage-perl \
+		perl \
+		wget
