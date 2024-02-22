@@ -2,7 +2,7 @@
 
 ORG_NAME ?= hihg-um
 OS_BASE ?= ubuntu
-OS_VER ?= 22.04
+OS_VER ?= 24.04
 
 IMAGE_REPOSITORY ?=
 
