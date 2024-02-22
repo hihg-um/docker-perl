@@ -5,13 +5,7 @@ PROJECT_NAME ?= perl
 OS_BASE ?= ubuntu
 OS_VER ?= 22.04
 
-USER ?= `whoami`
-USERID := `id -u`
-USERGNAME ?= ad
-USERGID ?= 1533
-
 IMAGE_REPOSITORY :=
-IMAGE := $(ORG_NAME)/$(USER)/$(PROJECT_NAME):latest
 
 # Use this for debugging builds. Turn off for a more slick build log
 DOCKER_BUILD_ARGS := --progress=plain
@@ -39,10 +33,6 @@ docker:
 		$(DOCKER_BUILD_ARGS) \
 		--target perl-libbio-db-hts-perl \
 		--build-arg BASE_IMAGE=$(OS_BASE):$(OS_VER) \
-		--build-arg USERNAME=$(USER) \
-		--build-arg USERID=$(USERID) \
-		--build-arg USERGNAME=$(USERGNAME) \
-		--build-arg USERGID=$(USERGID) \
 		.
 
 $(PROJECT_NAME).sif:
