@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: GPL-2.0
+ARG BASE_IMAGE
+FROM $BASE_IMAGE as builder
+
+LABEL org.opencontainers.image.description="ANNOVAR perl based container"
+
+RUN wget http://www.openbioinformatics.org/annovar/download/0wgxR2rIVP/annovar.latest.tar.gz && \
+  tar xf annovar.latest.tar.gz --wildcards *pl && \
+  mv annovar/*pl /usr/local/bin/ && \
+  rm -rf annovar annovar.latest.tar.gz
+
+FROM $BASE_IMAGE as runtime
+
+ARG RUN_CMD
+
+COPY --chmod=0555 --from=builder /usr/local/bin/*pl /usr/local/bin/
+
+ARG TEST="/test.sh"
+COPY --chmod=0555 src/test/$RUN_CMD.sh ${TEST}
