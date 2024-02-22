@@ -1,20 +1,57 @@
 # SPDX-License-Identifier: GPL-2.0
 
-ORG_NAME := hihg-um
-PROJECT_NAME ?= perl
+ORG_NAME ?= hihg-um
 OS_BASE ?= ubuntu
 OS_VER ?= 22.04
 
 IMAGE_REPOSITORY :=
 
-# Use this for debugging builds. Turn off for a more slick build log
-DOCKER_BUILD_ARGS := --progress=plain
+TOOLS :=
 
-.PHONY: all build clean docker test test_docker test_singularity
+DOCKER_BUILD_ARGS :=
+DOCKER_TAG ?= $(shell git describe --tags --broken --dirty --all --long | \
+		sed "s,heads/,," | sed "s,tags/,," | \
+		sed "s,remotes/pull/.*/,," \
+		)_$(shell uname -m)_$(shell uname -s | \
+		tr '[:upper:]' '[:lower:]')
+DOCKER_BASE ?= $(patsubst docker-%,%,$(shell basename \
+		`git remote --verbose | grep origin | grep fetch | \
+		cut -f2 | cut -d ' ' -f1` | sed 's/.git//'))
+DOCKER_IMAGES := $(TOOLS:=\:$(DOCKER_TAG))
+SIF_IMAGES := $(TOOLS:=_$(DOCKER_TAG).sif)
 
-all: docker $(PROJECT_NAME).sif test
+IMAGE_TEST := /test.sh
 
-test: test_docker test_singularity
+.PHONY: apptainer_clean apptainer_test \
+	docker_base docker_clean docker_test docker_release $(TOOLS)
+
+help:
+	@echo "Targets: all build clean test release"
+	@echo "         docker docker_base docker_clean docker_test docker_release"
+	@echo "         apptainer apptainer_clean apptainer_test"
+	@echo
+	@echo "Docker container(s):"
+	@for f in $(DOCKER_IMAGES); do \
+		printf "\t$$f\n"; \
+	done
+	@echo
+	@echo "Apptainer(s):"
+	@for f in $(SIF_IMAGES); do \
+		printf "\t$$f\n"; \
+	done
+	@echo
+
+all: clean build test
+
+build: docker apptainer
+
+clean: apptainer_clean docker_clean
+
+release: docker_release
+
+test: docker_test apptainer_test
+
+docker: docker_base $(TOOLS)
 
 test_docker:
 	@echo "Testing docker image: $(IMAGE)"
