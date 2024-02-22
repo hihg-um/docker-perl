@@ -6,7 +6,7 @@ OS_VER ?= 22.04
 
 IMAGE_REPOSITORY :=
 
-TOOLS := perl
+TOOLS := annovar perl
 
 DOCKER_BUILD_ARGS :=
 DOCKER_TAG ?= $(shell git describe --tags --broken --dirty --all --long | \
