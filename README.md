@@ -12,4 +12,4 @@ To run a perl script located in the local directory on your system,
 execute the following command:
 
 docker run -it -v "/local/path/to/perl/script:"/app":shared,ro,z \
-	hihg-um/${USER}/perl /app/<perl_script>.pl
+	hihg-um/perl /app/<perl_script>.pl
